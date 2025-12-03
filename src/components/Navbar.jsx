@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Activity } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import Logo from "../assets/Logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,15 +21,19 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg shadow-lg">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center py-3">
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-3 text-2xl font-bold text-blue-600 hover:scale-105 transition-transform"
+            className="flex items-center gap-3 hover:scale-105 transition-transform"
           >
-            <Activity size={32} className="text-blue-600" />
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              DisasterAI
+            <img
+              src={Logo}
+              alt="CrisisCore AI"
+              className="h-12 w-auto object-contain"
+            />
+            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent hidden sm:block">
+              CrisisCore AI
             </span>
           </Link>
 
@@ -40,13 +45,13 @@ const Navbar = () => {
                 to={link.path}
                 className={`relative font-medium transition-colors ${
                   isActive(link.path)
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-600"
+                    ? "text-green-600"
+                    : "text-gray-700 hover:text-green-600"
                 }`}
               >
                 {link.label}
                 {isActive(link.path) && (
-                  <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-600 rounded-full" />
+                  <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-green-600 rounded-full" />
                 )}
               </Link>
             ))}
@@ -55,7 +60,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors"
+            className="md:hidden p-2 text-gray-700 hover:text-green-600 transition-colors"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -71,7 +76,7 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
                 className={`block py-3 px-4 rounded-lg font-medium transition-all ${
                   isActive(link.path)
-                    ? "bg-blue-50 text-blue-600"
+                    ? "bg-green-50 text-green-600"
                     : "text-gray-700 hover:bg-gray-50"
                 }`}
               >

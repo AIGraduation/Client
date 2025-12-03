@@ -2,25 +2,25 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 min-h-screen;
+    @apply bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 min-h-screen;
   }
 }
 
 @layer components {
   .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl;
+    @apply bg-white/80 backdrop-blur-lg border border-green-200/50 rounded-2xl shadow-xl;
   }
 
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 hover:-translate-y-1;
   }
 
   .btn-secondary {
-    @apply bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1;
   }
 
   .card {
-    @apply bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2;
+    @apply bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-300 hover:-translate-y-2 border border-green-100/50;
   }
 }
 
@@ -32,7 +32,7 @@
 }
 
 .spinner {
-  @apply border-4 border-gray-200 border-t-blue-600 rounded-full w-12 h-12;
+  @apply border-4 border-green-100 border-t-green-600 rounded-full w-12 h-12;
   animation: spin 1s linear infinite;
 }
 
@@ -69,6 +69,16 @@
   }
 }
 
+@keyframes pulse-green {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }
@@ -89,6 +99,10 @@
   animation: fade-in-up 1s ease-out;
 }
 
+.animate-pulse-green {
+  animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .animation-delay-200 {
   animation-delay: 0.2s;
   animation-fill-mode: backwards;
@@ -102,4 +116,38 @@
 .animation-delay-600 {
   animation-delay: 0.6s;
   animation-fill-mode: backwards;
+}
+
+/* Alert and status indicators */
+.alert-success {
+  @apply bg-green-50 border-l-4 border-green-500 text-green-800 p-4 rounded;
+}
+
+.alert-warning {
+  @apply bg-amber-50 border-l-4 border-amber-500 text-amber-800 p-4 rounded;
+}
+
+.alert-danger {
+  @apply bg-red-50 border-l-4 border-red-500 text-red-800 p-4 rounded;
+}
+
+.alert-info {
+  @apply bg-teal-50 border-l-4 border-teal-500 text-teal-800 p-4 rounded;
+}
+
+/* Disaster severity indicators */
+.severity-low {
+  @apply bg-green-100 text-green-800 border border-green-300;
+}
+
+.severity-medium {
+  @apply bg-amber-100 text-amber-800 border border-amber-300;
+}
+
+.severity-high {
+  @apply bg-orange-100 text-orange-800 border border-orange-300;
+}
+
+.severity-critical {
+  @apply bg-red-100 text-red-800 border border-red-300;
 }
