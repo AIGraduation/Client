@@ -58,28 +58,80 @@ const ResultCard = ({ result, type, inputText }) => {
 
   if (!result) return null;
 
+  // ENHANCED: More granular severity levels
   const getSeverityColor = (score) => {
+    if (score >= 95) return "text-red-700";
     if (score >= 85) return "text-red-600";
-    if (score >= 70) return "text-orange-600";
+    if (score >= 75) return "text-orange-600";
+    if (score >= 65) return "text-orange-500";
     if (score >= 50) return "text-yellow-600";
-    return "text-green-600";
+    if (score >= 35) return "text-yellow-500";
+    if (score >= 25) return "text-green-600";
+    return "text-green-500";
   };
 
   const getSeverityBg = (score) => {
+    if (score >= 95) return "bg-gradient-to-br from-red-100 to-red-200";
     if (score >= 85) return "bg-gradient-to-br from-red-50 to-red-100";
-    if (score >= 70) return "bg-gradient-to-br from-orange-50 to-orange-100";
+    if (score >= 75) return "bg-gradient-to-br from-orange-50 to-orange-100";
+    if (score >= 65) return "bg-gradient-to-br from-orange-50 to-yellow-50";
     if (score >= 50) return "bg-gradient-to-br from-yellow-50 to-yellow-100";
-    return "bg-gradient-to-br from-green-50 to-green-100";
+    if (score >= 35) return "bg-gradient-to-br from-yellow-50 to-green-50";
+    if (score >= 25) return "bg-gradient-to-br from-green-50 to-green-100";
+    return "bg-gradient-to-br from-green-50 to-emerald-50";
   };
 
-  const getCategoryBadge = (category) => {
+  const getSeverityBorder = (score) => {
+    if (score >= 95) return "border-red-700";
+    if (score >= 85) return "border-red-600";
+    if (score >= 75) return "border-orange-600";
+    if (score >= 65) return "border-orange-500";
+    if (score >= 50) return "border-yellow-600";
+    if (score >= 35) return "border-yellow-500";
+    if (score >= 25) return "border-green-600";
+    return "border-green-500";
+  };
+
+  const getSeverityIconBg = (score) => {
+    if (score >= 95) return "bg-red-200";
+    if (score >= 85) return "bg-red-100";
+    if (score >= 75) return "bg-orange-100";
+    if (score >= 65) return "bg-orange-50";
+    if (score >= 50) return "bg-yellow-100";
+    if (score >= 35) return "bg-yellow-50";
+    if (score >= 25) return "bg-green-100";
+    return "bg-green-50";
+  };
+
+  const getSeverityCategory = (score) => {
+    if (score >= 95) return "Catastrophic";
+    if (score >= 85) return "Very High";
+    if (score >= 75) return "High";
+    if (score >= 65) return "Moderate-High";
+    if (score >= 50) return "Moderate";
+    if (score >= 35) return "Low-Moderate";
+    if (score >= 25) return "Low";
+    return "Very Low";
+  };
+
+  const getCategoryBadge = (score) => {
+    const category = getSeverityCategory(score);
     const colors = {
-      Catastrophic: "bg-red-500 text-white shadow-lg shadow-red-500/50",
-      High: "bg-orange-500 text-white shadow-lg shadow-orange-500/50",
-      Medium: "bg-yellow-500 text-white shadow-lg shadow-yellow-500/50",
-      Low: "bg-green-500 text-white shadow-lg shadow-green-500/50",
+      Catastrophic:
+        "bg-red-700 text-white shadow-lg shadow-red-700/50 animate-pulse",
+      "Very High": "bg-red-600 text-white shadow-lg shadow-red-600/50",
+      High: "bg-orange-600 text-white shadow-lg shadow-orange-600/50",
+      "Moderate-High":
+        "bg-orange-500 text-white shadow-lg shadow-orange-500/50",
+      Moderate: "bg-yellow-600 text-white shadow-lg shadow-yellow-600/50",
+      "Low-Moderate": "bg-yellow-500 text-white shadow-lg shadow-yellow-500/50",
+      Low: "bg-green-600 text-white shadow-lg shadow-green-600/50",
+      "Very Low": "bg-green-500 text-white shadow-lg shadow-green-500/50",
     };
-    return colors[category] || "bg-gray-500 text-white";
+    return {
+      className: colors[category] || "bg-gray-500 text-white",
+      label: category,
+    };
   };
 
   return (
@@ -141,32 +193,20 @@ const ResultCard = ({ result, type, inputText }) => {
               </p>
             </div>
 
-            {/* Severity Score */}
+            {/* ENHANCED Severity Score */}
             {result.severity_score !== null && (
               <div
                 className={`${getSeverityBg(
                   result.severity_score
-                )} rounded-2xl p-6 border-l-4 ${
-                  result.severity_score >= 85
-                    ? "border-red-500"
-                    : result.severity_score >= 70
-                    ? "border-orange-500"
-                    : result.severity_score >= 50
-                    ? "border-yellow-500"
-                    : "border-green-500"
-                } shadow-md hover:shadow-xl transition-shadow`}
+                )} rounded-2xl p-6 border-l-4 ${getSeverityBorder(
+                  result.severity_score
+                )} shadow-md hover:shadow-xl transition-shadow`}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div
-                    className={`p-2 ${
-                      result.severity_score >= 85
-                        ? "bg-red-100"
-                        : result.severity_score >= 70
-                        ? "bg-orange-100"
-                        : result.severity_score >= 50
-                        ? "bg-yellow-100"
-                        : "bg-green-100"
-                    } rounded-lg`}
+                    className={`p-2 ${getSeverityIconBg(
+                      result.severity_score
+                    )} rounded-lg`}
                   >
                     <Flame
                       size={24}
@@ -177,7 +217,7 @@ const ResultCard = ({ result, type, inputText }) => {
                     Severity Level
                   </h4>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <p
                     className={`text-4xl font-bold ${getSeverityColor(
                       result.severity_score
@@ -185,15 +225,38 @@ const ResultCard = ({ result, type, inputText }) => {
                   >
                     {result.severity_score}%
                   </p>
-                  {result.severity_category && (
-                    <span
-                      className={`px-4 py-2 rounded-xl text-sm font-bold ${getCategoryBadge(
-                        result.severity_category
-                      )}`}
-                    >
-                      {result.severity_category}
-                    </span>
-                  )}
+                  <span
+                    className={`px-4 py-2 rounded-xl text-sm font-bold ${
+                      getCategoryBadge(result.severity_score).className
+                    }`}
+                  >
+                    {getCategoryBadge(result.severity_score).label}
+                  </span>
+                </div>
+
+                {/* Visual severity bar */}
+                <div className="mt-4">
+                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        result.severity_score >= 85
+                          ? "bg-gradient-to-r from-red-500 to-red-700"
+                          : result.severity_score >= 70
+                          ? "bg-gradient-to-r from-orange-500 to-orange-600"
+                          : result.severity_score >= 50
+                          ? "bg-gradient-to-r from-yellow-500 to-yellow-600"
+                          : "bg-gradient-to-r from-green-500 to-green-600"
+                      }`}
+                      style={{ width: `${result.severity_score}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>0%</span>
+                    <span>Low</span>
+                    <span>Moderate</span>
+                    <span>High</span>
+                    <span>100%</span>
+                  </div>
                 </div>
               </div>
             )}
