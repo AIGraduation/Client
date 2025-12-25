@@ -329,6 +329,19 @@ const ResultCard = ({ result, type, inputText }) => {
               <div className="mt-6">
                 <Link
                   to="/map"
+                  state={{
+                    disaster: {
+                      id: Date.now(),
+                      text: inputText,
+                      location: locationData.coordinates[0].location,
+                      lat: locationData.coordinates[0].latitude,
+                      lng: locationData.coordinates[0].longitude,
+                      type: result.disaster_type,
+                      confidence: result.confidence_score,
+                      address: locationData.coordinates[0].full_address,
+                      timestamp: new Date().toLocaleString(),
+                    },
+                  }}
                   className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-emerald-500/30 transition-all hover:-translate-y-1"
                 >
                   <Map size={22} />

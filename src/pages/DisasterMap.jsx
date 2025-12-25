@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -79,10 +80,45 @@ const getDisasterIcon = (type, size = 20) => {
   return icons[type] || icons.disaster;
 };
 
+// Component to fly map to location
+const FlyToLocation = ({ lat, lng }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (lat && lng) {
+      map.flyTo([lat, lng], 10, { duration: 2 });
+    }
+  }, [lat, lng, map]);
+  return null;
+};
+
 const DisasterMap = () => {
+  const location = useLocation();
   const [disasters, setDisasters] = useState([]);
   const [textInput, setTextInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mapCenter, setMapCenter] = useState([20, 0]);
+  const [mapZoom, setMapZoom] = useState(2);
+
+  // Check if disaster data was passed from ResultCard
+  useEffect(() => {
+    if (location.state?.disaster) {
+      const incomingDisaster = location.state.disaster;
+      console.log("Received disaster from ResultCard:", incomingDisaster);
+
+      // Add the disaster to the list if not already present
+      setDisasters((prevDisasters) => {
+        const exists = prevDisasters.some(d => d.id === incomingDisaster.id);
+        if (!exists) {
+          return [...prevDisasters, incomingDisaster];
+        }
+        return prevDisasters;
+      });
+
+      // Set map center to the disaster location
+      setMapCenter([incomingDisaster.lat, incomingDisaster.lng]);
+      setMapZoom(10);
+    }
+  }, [location.state]);
 
   const analyzeText = async () => {
     if (!textInput.trim()) return;
@@ -255,11 +291,16 @@ const DisasterMap = () => {
             </h3>
           </div>
           <div className="rounded-xl overflow-hidden border-4 border-green-200 shadow-xl">
-            <MapContainer center={[20, 0]} zoom={2} style={{ height: "600px" }}>
+            <MapContainer center={mapCenter} zoom={mapZoom} style={{ height: "600px" }}>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
+
+              {/* Fly to location if passed from ResultCard */}
+              {location.state?.disaster && (
+                <FlyToLocation lat={location.state.disaster.lat} lng={location.state.disaster.lng} />
+              )}
 
               {disasters.map((disaster) => (
                 <Marker
